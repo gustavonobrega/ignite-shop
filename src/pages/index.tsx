@@ -10,6 +10,8 @@ import { HomeContainer, Product,  } from '../styles/pages/home'
 
 import 'keen-slider/keen-slider.min.css'
 import { Handbag } from 'phosphor-react';
+import { useContext } from 'react';
+import { CartContext } from '../contexts/CartContext';
 
 
 interface HomeProps {
@@ -18,11 +20,13 @@ interface HomeProps {
     name: string;
     imageUrl: string;
     price: string;
+    defaultPriceId: string;
   }[]
 }
 
 
 export default function Home({ products }: HomeProps) {
+  const { addToCart } = useContext(CartContext);
   const [sliderRef] = useKeenSlider({
     slides: {
       perView: 3,
@@ -36,25 +40,24 @@ export default function Home({ products }: HomeProps) {
         <title>Home - Ignite Shop</title>
       </Head>
 
-      <HomeContainer ref={sliderRef} className="keen-slider" >
+      <HomeContainer ref={sliderRef} className="keen-slider">
         {products.map(product => {
           return (
-            <Link href={`/product/${product.id}`} key={product.id} prefetch={false} >
-              <Product  className="keen-slider__slide">
+            <Product className="keen-slider__slide" key={product.id} >
+              <Link href={`/product/${product.id}`} prefetch={false} >
                 <Image src={product.imageUrl} width={520} height={480} alt="" />
-              
+              </Link>
                 <footer>
                   <div>
                     <strong>{product.name}</strong>
                     <span>{product.price}</span>
                   </div>
 
-                    <button>
-                      <Handbag size={32} weight="bold" />
-                    </button>
+                  <button type='button' >
+                    <Handbag size={32} weight="bold" onClick={() => addToCart(product)}  />
+                  </button>
                 </footer>
-              </Product>
-            </Link>
+            </Product>
           )
         })}
       </HomeContainer>
@@ -78,6 +81,7 @@ export const getStaticProps: GetStaticProps = async () => {
         style: 'currency',
         currency: 'BRL'
       }).format(price.unit_amount / 100),
+      defaultPriceId: price.id,
     }
   })
   
