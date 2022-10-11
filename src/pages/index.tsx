@@ -29,7 +29,7 @@ export default function Home({ products }: HomeProps) {
   const { addToCart } = useContext(CartContext);
   const [sliderRef] = useKeenSlider({
     slides: {
-      perView: 3,
+      perView: 2.2,
       spacing: 48,
     }
   })
