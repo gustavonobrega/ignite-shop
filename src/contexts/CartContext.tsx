@@ -24,6 +24,12 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
   const [cart, setCart] = useState<Product[]>([]);
 
   function addToCart(product: Product) {
+    const cartProduct = cart.find(cartProd => cartProd.id === product.id);
+    
+    if (cartProduct) {
+      return alert('Limited shirts, only one of each!')
+    }
+
     setCart(state => [...state, product])
   }
 
